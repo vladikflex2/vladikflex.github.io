@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineVault — Мир кино</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── CSS Variables ─────────────────────────── */
+    :root {
+      --bg:       #0a0a0f;
+      --bg2:      #111118;
+      --card:     #16161f;
+      --border:   rgba(255,255,255,0.07);
+      --text:     #e8e8f0;
+      --muted:    #7a7a95;
+      --accent:   #e8b84b;
+      --accent2:  #c0392b;
+      --white:    #ffffff;
+      --radius:   12px;
+      --shadow:   0 8px 40px rgba(0,0,0,0.5);
+      --trans:    0.3s ease;
+    }
+    [data-theme="light"] {
+      --bg:    #f4f2ee;
+      --bg2:   #ebe8e1;
+      --card:  #ffffff;
+      --border:rgba(0,0,0,0.08);
+      --text:  #1a1a2e;
+      --muted: #8a8a9a;
+      --shadow:0 8px 40px rgba(0,0,0,0.12);
+    }
+
+    /* ─── Reset & Base ───────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background var(--trans), color var(--trans);
+      line-height: 1.6;
+    }
+    img { display: block; width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── Header ─────────────────────────────────── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5%;
+      transition: background var(--trans);
+    }
+    [data-theme="light"] header { background: rgba(244,242,238,0.88); }
+    .header-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem; font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: var(--accent); }
+    nav { display: flex; gap: 2rem; }
+    nav a {
+      font-size: 0.9rem; font-weight: 500; color: var(--muted);
+      transition: color var(--trans);
+    }
+    nav a:hover { color: var(--text); }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+
+    /* Theme toggle */
+    .theme-btn {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 50px; width: 52px; height: 28px;
+      position: relative; cursor: pointer;
+      transition: background var(--trans);
+    }
+    .theme-btn::after {
+      content: '';
+      position: absolute; top: 3px; left: 3px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--accent);
+      transition: transform var(--trans);
+    }
+    [data-theme="light"] .theme-btn::after { transform: translateX(24px); }
+
+    /* CTA nav btn */
+    .btn-nav {
+      background: var(--accent); color: #000;
+      font-weight: 600; font-size: 0.85rem;
+      padding: 0.5rem 1.1rem; border-radius: 6px;
+      transition: opacity var(--trans);
+    }
+    .btn-nav:hover { opacity: 0.85; }
+
+    /* ─── Hero ───────────────────────────────────── */
+    .hero {
+      min-height: 92vh;
+      display: flex; align-items: center;
+      padding: 4rem 5%;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 60% 50%, rgba(232,184,75,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 10% 80%, rgba(192,57,43,0.07) 0%, transparent 60%);
+    }
+    [data-theme="light"] .hero-bg {
+      background:
+        radial-gradient(ellipse 70% 60% at 60% 50%, rgba(232,184,75,0.13) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 10% 80%, rgba(192,57,43,0.08) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 620px; }
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.78rem; font-weight: 500; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      border: 1px solid rgba(232,184,75,0.4);
+      padding: 0.3rem 0.9rem; border-radius: 50px;
+      margin-bottom: 1.6rem;
+      animation: fadeUp 0.7s ease both;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      line-height: 1.08; font-weight: 900;
+      margin-bottom: 1.4rem;
+      animation: fadeUp 0.7s 0.15s ease both;
+    }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .hero p {
+      font-size: 1.05rem; color: var(--muted);
+      max-width: 480px; margin-bottom: 2.4rem;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.7s 0.45s ease both; }
+    .btn-primary {
+      background: var(--accent); color: #000;
+      font-weight: 700; font-size: 0.95rem;
+      padding: 0.85rem 2rem; border-radius: 8px;
+      transition: transform 0.2s, opacity 0.2s;
+      border: none; cursor: pointer;
+    }
+    .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      font-weight: 500; font-size: 0.95rem;
+      padding: 0.85rem 2rem; border-radius: 8px;
+      border: 1px solid var(--border); cursor: pointer;
+      transition: border-color var(--trans), transform 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    /* Hero stats */
+    .hero-stats {
+      display: flex; gap: 2.5rem; margin-top: 3.5rem;
+      animation: fadeUp 0.7s 0.6s ease both;
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 700; color: var(--accent);
+      line-height: 1;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ─── Section scaffold ───────────────────────── */
+    section { padding: 5rem 5%; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-head { text-align: center; margin-bottom: 3rem; }
+    .section-head h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 900;
+      margin-bottom: 0.6rem;
+    }
+    .section-head p { color: var(--muted); font-size: 1rem; }
+    .divider { width: 48px; height: 3px; background: var(--accent); border-radius: 2px; margin: 0.8rem auto 0; }
+
+    /* ─── About / Features ───────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.8rem;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.88rem; color: var(--muted); }
+
+    /* ─── Movies / Catalog ───────────────────────── */
+    #movies { background: var(--bg2); }
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 1.5rem;
+    }
+    .movie-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+    }
+    .movie-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+    .movie-poster {
+      aspect-ratio: 2/3; overflow: hidden; position: relative;
+    }
+    .poster-img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.4s ease;
+      background: var(--bg2);
+    }
+    .movie-card:hover .poster-img { transform: scale(1.05); }
+    .poster-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    .movie-badge {
+      position: absolute; top: 10px; left: 10px;
+      background: var(--accent2); color: #fff;
+      font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem;
+      border-radius: 4px; letter-spacing: 0.5px;
+    }
+    .movie-info { padding: 1rem; }
+    .movie-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .movie-meta { display: flex; justify-content: space-between; align-items: center; }
+    .movie-year { font-size: 0.8rem; color: var(--muted); }
+    .movie-rating { font-size: 0.8rem; color: var(--accent); font-weight: 700; }
+    .movie-genre { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* Show more btn */
+    .show-more-wrap { text-align: center; margin-top: 2.5rem; }
+    .btn-show-more {
+      background: transparent; color: var(--accent);
+      border: 1.5px solid var(--accent);
+      font-weight: 600; font-size: 0.95rem;
+      padding: 0.8rem 2.4rem; border-radius: 8px;
+      cursor: pointer; transition: background var(--trans), color var(--trans), transform 0.2s;
+    }
+    .btn-show-more:hover { background: var(--accent); color: #000; transform: translateY(-2px); }
+    .btn-show-more:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* ─── Reviews ────────────────────────────────── */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .review-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.8rem;
+      position: relative;
+    }
+    .review-quote {
+      font-size: 3rem; line-height: 1; color: var(--accent);
+      font-family: 'Playfair Display', serif;
+      position: absolute; top: 12px; right: 18px; opacity: 0.4;
+    }
+    .review-text { font-size: 0.92rem; color: var(--muted); margin-bottom: 1.2rem; line-height: 1.7; }
+    .review-author { display: flex; align-items: center; gap: 0.8rem; }
+    .review-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9rem; color: #000; flex-shrink: 0;
+    }
+    .review-name { font-weight: 700; font-size: 0.88rem; }
+    .review-stars { color: var(--accent); font-size: 0.8rem; }
+
+    /* ─── Contact Form ───────────────────────────── */
+    #contact { background: var(--bg2); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: start;
+    }
+    .contact-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 900; margin-bottom: 1rem;
+    }
+    .contact-info p { color: var(--muted); margin-bottom: 1.8rem; font-size: 0.95rem; }
+    .contact-detail { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; }
+    .contact-detail span:first-child { font-size: 1.1rem; }
+    .contact-detail span:last-child { font-size: 0.9rem; color: var(--muted); }
+
+    /* Form */
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block; font-size: 0.85rem; font-weight: 500;
+      margin-bottom: 0.4rem; color: var(--muted);
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem 1rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      color: var(--text); outline: none;
+      transition: border-color var(--trans);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--accent); }
+    .form-group input.error,
+    .form-group textarea.error { border-color: #e74c3c; }
+    .form-group .error-msg {
+      font-size: 0.78rem; color: #e74c3c; margin-top: 0.3rem; display: none;
+    }
+    .form-group .error-msg.show { display: block; }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .form-success {
+      background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.4);
+      border-radius: 8px; padding: 1rem 1.2rem;
+      font-size: 0.9rem; color: #27ae60;
+      display: none; margin-bottom: 1rem;
+    }
+    .form-success.show { display: block; }
+
+    /* ─── Footer ─────────────────────────────────── */
+    footer {
+      background: var(--bg); border-top: 1px solid var(--border);
+      padding: 3rem 5% 1.5rem;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      flex-wrap: wrap; gap: 2rem; margin-bottom: 2.5rem;
+    }
+    .footer-brand .logo { margin-bottom: 0.6rem; font-size: 1.3rem; }
+    .footer-brand p { font-size: 0.85rem; color: var(--muted); max-width: 240px; }
+    .footer-links h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+    .footer-links a { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; transition: color var(--trans); }
+    .footer-links a:hover { color: var(--accent); }
+    .socials { display: flex; gap: 0.8rem; margin-top: 1rem; }
+    .social-btn {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--card); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; transition: border-color var(--trans), transform 0.2s;
+      cursor: pointer; text-decoration: none;
+    }
+    .social-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 1.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .footer-bottom p { font-size: 0.8rem; color: var(--muted); }
+
+    /* ─── Animations ─────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── Responsive ─────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    }
+    @media (max-width: 500px) {
+      .hero-btns { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">Cine<span>Vault</span></a>
+    <nav>
+      <a href="#about">О нас</a>
+      <a href="#movies">Фильмы</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <div class="header-right">
+      <button class="theme-btn" id="themeBtn" aria-label="Переключить тему"></button>
+      <a href="#movies" class="btn-nav">Смотреть</a>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<main>
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <span class="hero-tag">🎬 Кинотеатр нового поколения</span>
+      <h1>Погрузись в мир <em>большого кино</em></h1>
+      <p>Тысячи фильмов, рецензии критиков и персональные подборки — всё в одном месте. Открой кино заново.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="document.getElementById('movies').scrollIntoView({behavior:'smooth'})">Смотреть каталог</button>
+        <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Узнать больше</button>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">12K+</div>
+          <div class="stat-label">Фильмов в базе</div>
+        </div>
+        <div>
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Средний рейтинг</div>
+        </div>
+        <div>
+          <div class="stat-num">200K</div>
+          <div class="stat-label">Пользователей</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ ABOUT / FEATURES ═══════════════ -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="section-head reveal">
+        <h2>Почему CineVault?</h2>
+        <div class="divider"></div>
+        <p>Мы создали платформу, которая делает кино ближе к тебе</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">🎭</div>
+          <h3>Умные подборки</h3>
+          <p>Алгоритм анализирует твои вкусы и составляет персональные рекомендации каждую неделю.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">🌍</div>
+          <h3>Мировое кино</h3>
+          <p>Фильмы из 80+ стран: Европа, Азия, Латинская Америка — откройте шедевры без языкового барьера.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">✍️</div>
+          <h3>Рецензии критиков</h3>
+          <p>Профессиональные рецензии и пользовательские отзывы помогут выбрать идеальный фильм на вечер.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">📱</div>
+          <h3>На любом устройстве</h3>
+          <p>Телефон, планшет или компьютер — сайт адаптируется под любой экран без потери качества.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ MOVIES ═══════════════ -->
+  <section id="movies">
+    <div class="section-inner">
+      <div class="section-head reveal">
+        <h2>Каталог фильмов</h2>
+        <div class="divider"></div>
+        <p>Лучшие фильмы всех времён и жанров</p>
+      </div>
+      <div class="movies-grid" id="moviesGrid"></div>
+      <div class="show-more-wrap">
+        <button class="btn-show-more" id="showMoreBtn">Показать ещё</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ REVIEWS ═══════════════ -->
+  <section id="reviews">
+    <div class="section-inner">
+      <div class="section-head reveal">
+        <h2>Отзывы зрителей</h2>
+        <div class="divider"></div>
+        <p>Что говорят наши пользователи</p>
+      </div>
+      <div class="reviews-grid">
+        <div class="review-card reveal">
+          <div class="review-quote">"</div>
+          <p class="review-text">CineVault стал моим главным источником вдохновения. Подборки точно попадают в настроение, а рецензии помогают не тратить время зря.</p>
+          <div class="review-author">
+            <div class="review-avatar">АМ</div>
+            <div>
+              <div class="review-name">Алексей Морозов</div>
+              <div class="review-stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-quote">"</div>
+          <p class="review-text">Открыла для себя потрясающее корейское кино именно здесь. Интерфейс удобный, дизайн красивый, и переключатель тёмной темы — просто спасение!</p>
+          <div class="review-author">
+            <div class="review-avatar">СК</div>
+            <div>
+              <div class="review-name">София Климова</div>
+              <div class="review-stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-quote">"</div>
+          <p class="review-text">Смотрю кино каждый день, и CineVault — мой постоянный спутник. Огромный каталог, быстрая загрузка и никакой лишней рекламы.</p>
+          <div class="review-author">
+            <div class="review-avatar">ДП</div>
+            <div>
+              <div class="review-name">Дмитрий Петров</div>
+              <div class="review-stars">★★★★☆</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CONTACT ═══════════════ -->
+  <section id="contact">
+    <div class="section-inner">
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <h3>Напишите нам</h3>
+          <p>Есть вопросы, предложения или хочешь сотрудничать? Мы ответим в течение 24 часов.</p>
+          <div class="contact-detail"><span>📧</span><span>hello@cinevault.ru</span></div>
+          <div class="contact-detail"><span>📞</span><span>+7 (495) 000-00-00</span></div>
+          <div class="contact-detail"><span>📍</span><span>Москва, ул. Кино, 1</span></div>
+          <div class="socials">
+            <a class="social-btn" href="#" aria-label="Telegram">✈️</a>
+            <a class="social-btn" href="#" aria-label="VK">💬</a>
+            <a class="social-btn" href="#" aria-label="YouTube">▶️</a>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="form-success" id="formSuccess">✅ Сообщение отправлено! Мы свяжемся с вами в ближайшее время.</div>
+          <form id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fname">Имя *</label>
+                <input type="text" id="fname" placeholder="Иван" />
+                <div class="error-msg" id="fnameErr">Введите имя</div>
+              </div>
+              <div class="form-group">
+                <label for="phone">Телефон</label>
+                <input type="tel" id="phone" placeholder="+7 (999) 000-00-00" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" placeholder="ivan@example.com" />
+              <div class="error-msg" id="emailErr">Введите корректный email</div>
+            </div>
+            <div class="form-group">
+              <label for="message">Сообщение *</label>
+              <textarea id="message" placeholder="Ваш вопрос или предложение..."></textarea>
+              <div class="error-msg" id="messageErr">Напишите сообщение</div>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%;font-size:1rem;padding:0.95rem;">Отправить сообщение</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">Cine<span>Vault</span></div>
+        <p>Мир большого кино в одном месте. Смотри, открывай, делись.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Навигация</h4>
+        <a href="#about">О нас</a>
+        <a href="#movies">Каталог</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#contact">Контакты</a>
+      </div>
+      <div class="footer-links">
+        <h4>Жанры</h4>
+        <a href="#">Боевики</a>
+        <a href="#">Комедии</a>
+        <a href="#">Драмы</a>
+        <a href="#">Триллеры</a>
+      </div>
+      <div class="footer-links">
+        <h4>Поддержка</h4>
+        <a href="#">FAQ</a>
+        <a href="#">Политика конфиденциальности</a>
+        <a href="#">Условия использования</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 CineVault. Все права защищены.</p>
+      <p>Сделано с ❤️ для любителей кино</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<script>
+  // ── Data ──────────────────────────────────────
+  const ALL_MOVIES = [
+    { title: "Побег из Шоушенка",    year: 1994, genre: "Драма",     rating: "9.3", emoji: "🏛️", badge: "Топ" },
+    { title: "Крёстный отец",        year: 1972, genre: "Криминал",  rating: "9.2", emoji: "🌹", badge: "Классика" },
+    { title: "Тёмный рыцарь",        year: 2008, genre: "Боевик",    rating: "9.0", emoji: "🦇", badge: "Топ" },
+    { title: "Список Шиндлера",      year: 1993, genre: "История",   rating: "8.9", emoji: "📜", badge: null },
+    { title: "Властелин колец",      year: 2003, genre: "Фэнтези",   rating: "8.9", emoji: "💍", badge: "Хит" },
+    { title: "Форрест Гамп",         year: 1994, genre: "Драма",     rating: "8.8", emoji: "🏃", badge: null },
+    { title: "Начало",               year: 2010, genre: "Фантастика",rating: "8.8", emoji: "🌀", badge: "Хит" },
+    { title: "Матрица",              year: 1999, genre: "Фантастика",rating: "8.7", emoji: "🕶️", badge: "Классика" },
+    { title: "Бойцовский клуб",      year: 1999, genre: "Триллер",   rating: "8.8", emoji: "👊", badge: null },
+    { title: "Молчание ягнят",       year: 1991, genre: "Триллер",   rating: "8.6", emoji: "🦋", badge: null },
+    { title: "Семь",                 year: 1995, genre: "Криминал",  rating: "8.6", emoji: "7️⃣", badge: null },
+    { title: "Интерстеллар",         year: 2014, genre: "Фантастика",rating: "8.7", emoji: "🪐", badge: "Хит" },
+    { title: "Паразиты",             year: 2019, genre: "Триллер",   rating: "8.5", emoji: "🏠", badge: "Оскар" },
+    { title: "Дюна",                 year: 2021, genre: "Фантастика",rating: "8.1", emoji: "🏜️", badge: "Новинка" },
+    { title: "Джокер",               year: 2019, genre: "Драма",     rating: "8.4", emoji: "🃏", badge: null },
+    { title: "1+1",                  year: 2011, genre: "Комедия",   rating: "8.8", emoji: "🤝", badge: "Топ" },
+    { title: "Зелёная книга",        year: 2018, genre: "Комедия",   rating: "8.2", emoji: "📗", badge: "Оскар" },
+    { title: "Опpenheimer",          year: 2023, genre: "История",   rating: "8.5", emoji: "☢️", badge: "Новинка" },
+  ];
+
+  let shown = 0;
+  const STEP = 6;
+
+  function createCard(m) {
+    return `
+      <article class="movie-card reveal">
+        <div class="movie-poster">
+          <div class="poster-placeholder">${m.emoji}</div>
+          ${m.badge ? `<span class="movie-badge">${m.badge}</span>` : ''}
+        </div>
+        <div class="movie-info">
+          <div class="movie-title">${m.title}</div>
+          <div class="movie-meta">
+            <span class="movie-year">${m.year}</span>
+            <span class="movie-rating">★ ${m.rating}</span>
+          </div>
+          <div class="movie-genre">${m.genre}</div>
+        </div>
+      </article>`;
+  }
+
+  function renderMovies() {
+    const grid = document.getElementById('moviesGrid');
+    const end = Math.min(shown + STEP, ALL_MOVIES.length);
+    for (let i = shown; i < end; i++) {
+      grid.insertAdjacentHTML('beforeend', createCard(ALL_MOVIES[i]));
+    }
+    shown = end;
+    observeReveal();
+    if (shown >= ALL_MOVIES.length) {
+      document.getElementById('showMoreBtn').disabled = true;
+      document.getElementById('showMoreBtn').textContent = 'Все фильмы загружены';
+    }
+  }
+
+  document.getElementById('showMoreBtn').addEventListener('click', renderMovies);
+  renderMovies(); // initial load
+
+  // ── Theme Toggle ──────────────────────────────
+  const html = document.documentElement;
+  const savedTheme = localStorage.getItem('cinevault-theme') || 'dark';
+  html.setAttribute('data-theme', savedTheme);
+
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('cinevault-theme', next);
+  });
+
+  // ── Form Validation ───────────────────────────
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    const fname   = document.getElementById('fname');
+    const email   = document.getElementById('email');
+    const message = document.getElementById('message');
+    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function setError(field, errId, condition) {
+      const err = document.getElementById(errId);
+      if (condition) {
+        field.classList.add('error');
+        err.classList.add('show');
+        valid = false;
+      } else {
+        field.classList.remove('error');
+        err.classList.remove('show');
+      }
+    }
+
+    setError(fname,   'fnameErr',   fname.value.trim().length < 2);
+    setError(email,   'emailErr',   !emailRx.test(email.value.trim()));
+    setError(message, 'messageErr', message.value.trim().length < 5);
+
+    if (valid) {
+      const data = {
+        name:    fname.value.trim(),
+        email:   email.value.trim(),
+        phone:   document.getElementById('phone').value.trim(),
+        message: message.value.trim(),
+      };
+      console.log('📩 Форма отправлена:', data);
+      document.getElementById('formSuccess').classList.add('show');
+      this.reset();
+      setTimeout(() => document.getElementById('formSuccess').classList.remove('show'), 5000);
+    }
+  });
+
+  // ── Scroll Reveal ─────────────────────────────
+  function observeReveal() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => io.observe(el));
+  }
+  observeReveal();
+</script>
+</body>
+</html>
